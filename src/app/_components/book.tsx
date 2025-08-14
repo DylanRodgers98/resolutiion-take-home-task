@@ -5,15 +5,17 @@ interface BookProps {
   title: string;
   author: string;
   isRead: boolean;
+  isLoggedIn: boolean;
 }
 
-export function Book({ id, title, author, isRead }: BookProps) {
+export function Book({ id, title, author, isRead, isLoggedIn }: BookProps) {
   return (
     <div className="py-2">
       <p className="truncate">
         {id}: {title} by {author}
       </p>
-      Read? <IsBookReadCheckbox bookId={id} isRead={isRead} />
+      Read?{" "}
+      <IsBookReadCheckbox bookId={id} isRead={isRead} isLoggedIn={isLoggedIn} />
     </div>
   );
 }

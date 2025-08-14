@@ -29,7 +29,7 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-          <AllBooks />
+          <AllBooks isLoggedIn={!!session} />
           {session?.user && <CreateBook />}
         </div>
       </main>

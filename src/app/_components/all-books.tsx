@@ -3,7 +3,11 @@
 import { api } from "~/trpc/react";
 import { Book } from "./book";
 
-export function AllBooks() {
+interface Props {
+  isLoggedIn: boolean;
+}
+
+export function AllBooks(props: Props) {
   const [books] = api.book.getAll.useSuspenseQuery();
   console.log(books);
 
@@ -17,6 +21,7 @@ export function AllBooks() {
             title={book.title}
             author={book.author}
             isRead={book.isRead}
+            isLoggedIn={props.isLoggedIn}
           />
         ))
       ) : (
