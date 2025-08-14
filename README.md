@@ -31,4 +31,4 @@ I have committed the .env file which includes the secrets needed to run the app.
 
 - Add tests
 - Use a React provider instead of prop-drilling
-  - Note: I spent too much time on this for session/login information, but get myself stuck with server vs client components. This is also the reason I have not added tests, because I unfortunately wasted too much time.
+  - Note: I spent too much time on this for session/login information, but got myself stuck with server vs client components. This is also the reason I have not added tests, because I unfortunately wasted too much time.
