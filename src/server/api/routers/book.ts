@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { eq, and, count } from "drizzle-orm";
+import { eq, and, count, desc } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -11,14 +11,47 @@ import { usersToBooksRead } from "~/server/db/schema";
 import { books } from "~/server/db/schema/book";
 
 export const bookRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) =>
-    ctx.db
-      .select({
-        title: books.title,
-        author: books.author,
-      })
-      .from(books),
-  ),
+  getAll: publicProcedure
+    .output(
+      z.array(
+        z.object({
+          id: z.number().int(),
+          title: z.string().min(1).trim(),
+          author: z.string().min(1).trim(),
+          isRead: z
+            .boolean()
+            .optional()
+            .transform((val) => val ?? false),
+        }),
+      ),
+    )
+    .query(async ({ ctx }) => {
+      if (ctx.session) {
+        const result = await ctx.db
+          .select()
+          .from(books)
+          .leftJoin(usersToBooksRead, eq(usersToBooksRead.bookId, books.id))
+          .orderBy(desc(books.updatedAt));
+
+        return result.map(({ book, user_to_book_read }) => {
+          console.log(user_to_book_read);
+          return {
+            id: book.id as number,
+            title: `${book.title}`,
+            author: `${book.author}`,
+            isRead: !!user_to_book_read,
+          };
+        });
+      }
+      return ctx.db
+        .select({
+          id: books.id,
+          title: books.title,
+          author: books.author,
+        })
+        .from(books)
+        .orderBy(desc(books.updatedAt));
+    }),
 
   create: protectedProcedure
     .input(
