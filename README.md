@@ -13,6 +13,8 @@ This is a Next.js 15 App Router app created using Create T3 App to bootstrap Nex
 3. Start app by running `dev`
 4. Open `http://localhost:3000` in your browser
 
+I have committed the .env file which includes the secrets needed to run the app. Usually this would obviously not be committed and the env vars shared via something like Hashicorp Vault.
+
 ## Available operations
 
 ### Unprotected
