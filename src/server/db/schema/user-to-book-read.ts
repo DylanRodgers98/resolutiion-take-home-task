@@ -1,18 +1,22 @@
-import { relations } from 'drizzle-orm';
-import { pgTable } from 'drizzle-orm/pg-core';
-import { users } from './user';
-import { books } from './book';
+import { relations } from "drizzle-orm";
+import { pgTable, primaryKey } from "drizzle-orm/pg-core";
+import { users } from "./user";
+import { books } from "./book";
 
-export const usersToBooksRead = pgTable('user_to_book_read', (d) => ({
-  userId: d
-    .varchar({ length: 255 })
-    .notNull()
-    .references(() => users.id),
-  bookId: d
-    .integer()
-    .notNull()
-    .references(() => books.id),
-}));
+export const usersToBooksRead = pgTable(
+  "user_to_book_read",
+  (d) => ({
+    userId: d
+      .varchar({ length: 255 })
+      .notNull()
+      .references(() => users.id),
+    bookId: d
+      .integer()
+      .notNull()
+      .references(() => books.id),
+  }),
+  (table) => [primaryKey({ columns: [table.userId, table.bookId] })],
+);
 
 export const usersToBooksRelations = relations(usersToBooksRead, ({ one }) => ({
   user: one(users, {

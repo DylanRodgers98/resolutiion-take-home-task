@@ -1,10 +1,10 @@
-import { relations, sql } from 'drizzle-orm';
-import { index, pgTable, primaryKey } from 'drizzle-orm/pg-core';
-import { type AdapterAccount } from 'next-auth/adapters';
-import { users } from './user';
+import { relations, sql } from "drizzle-orm";
+import { index, pgTable, primaryKey } from "drizzle-orm/pg-core";
+import { type AdapterAccount } from "next-auth/adapters";
+import { users } from "./user";
 
 export const posts = pgTable(
-  'post',
+  "post",
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
     name: d.varchar({ length: 256 }),
@@ -19,19 +19,19 @@ export const posts = pgTable(
     updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
   (t) => [
-    index('created_by_idx').on(t.createdById),
-    index('name_idx').on(t.name),
+    index("created_by_idx").on(t.createdById),
+    index("name_idx").on(t.name),
   ],
 );
 
 export const accounts = pgTable(
-  'account',
+  "account",
   (d) => ({
     userId: d
       .varchar({ length: 255 })
       .notNull()
       .references(() => users.id),
-    type: d.varchar({ length: 255 }).$type<AdapterAccount['type']>().notNull(),
+    type: d.varchar({ length: 255 }).$type<AdapterAccount["type"]>().notNull(),
     provider: d.varchar({ length: 255 }).notNull(),
     providerAccountId: d.varchar({ length: 255 }).notNull(),
     refresh_token: d.text(),
@@ -45,7 +45,7 @@ export const accounts = pgTable(
   }),
   (t) => [
     primaryKey({ columns: [t.provider, t.providerAccountId] }),
-    index('account_user_id_idx').on(t.userId),
+    index("account_user_id_idx").on(t.userId),
   ],
 );
 
@@ -54,16 +54,16 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 }));
 
 export const sessions = pgTable(
-  'session',
+  "session",
   (d) => ({
     sessionToken: d.varchar({ length: 255 }).notNull().primaryKey(),
     userId: d
       .varchar({ length: 255 })
       .notNull()
       .references(() => users.id),
-    expires: d.timestamp({ mode: 'date', withTimezone: true }).notNull(),
+    expires: d.timestamp({ mode: "date", withTimezone: true }).notNull(),
   }),
-  (t) => [index('t_user_id_idx').on(t.userId)],
+  (t) => [index("t_user_id_idx").on(t.userId)],
 );
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -71,11 +71,11 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 }));
 
 export const verificationTokens = pgTable(
-  'verification_token',
+  "verification_token",
   (d) => ({
     identifier: d.varchar({ length: 255 }).notNull(),
     token: d.varchar({ length: 255 }).notNull(),
-    expires: d.timestamp({ mode: 'date', withTimezone: true }).notNull(),
+    expires: d.timestamp({ mode: "date", withTimezone: true }).notNull(),
   }),
   (t) => [primaryKey({ columns: [t.identifier, t.token] })],
 );
