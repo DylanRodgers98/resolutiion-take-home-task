@@ -9,5 +9,4 @@ export default {
     url: env.DATABASE_URL,
   },
   tablesFilter: ['resolutiion_*'],
-  casing: 'snake_case',
 } satisfies Config;
