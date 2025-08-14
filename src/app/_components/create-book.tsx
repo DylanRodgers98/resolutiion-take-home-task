@@ -4,41 +4,42 @@ import { useState } from "react";
 
 import { api } from "~/trpc/react";
 
-export function LatestPost() {
-  const [books] = api.book.getAll.useSuspenseQuery();
+export function CreateBook() {
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
 
   const utils = api.useUtils();
-  const [name, setName] = useState("");
   const createBook = api.book.create.useMutation({
     onSuccess: async () => {
       await utils.book.invalidate();
-      setName("");
+      setTitle("");
+      setAuthor("");
     },
   });
 
   return (
     <div className="w-full max-w-xs">
-      {books.length ? (
-        books.map((book, i) => (
-          <p className="truncate" key={i}>
-            {book.title} by {book.author}
-          </p>
-        ))
-      ) : (
-        <p>You have no posts yet.</p>
-      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          createBook.mutate({ title: name, author: name });
+          createBook.mutate({ title, author });
         }}
         className="flex flex-col gap-2"
       >
         <input
           type="text"
           placeholder="Title"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          className="w-full rounded-full bg-white/10 px-4 py-2 text-white"
+        />
+        <input
+          type="text"
+          placeholder="Author"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+          required
           className="w-full rounded-full bg-white/10 px-4 py-2 text-white"
         />
         <button

@@ -1,8 +1,9 @@
 import Link from "next/link";
 
-import { LatestPost } from "~/app/_components/post";
+import { CreateBook } from "~/app/_components/create-book";
 import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
+import { AllBooks } from "./_components/all-books";
 
 export default async function Home() {
   const session = await auth();
@@ -28,8 +29,8 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-
-          {session?.user && <LatestPost />}
+          <AllBooks />
+          {session?.user && <CreateBook />}
         </div>
       </main>
     </HydrateClient>
